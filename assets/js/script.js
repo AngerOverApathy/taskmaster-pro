@@ -81,15 +81,7 @@ $("#task-form-modal .btn-primary").click(function() {
   }
 });
 
-// remove all tasks
-$("#remove-tasks").on("click", function() {
-  for (var key in tasks) {
-    tasks[key].length = 0;
-    $("#list-" + key).empty();
-  }
-  saveTasks();
-});
-
+// task was clicked
 $(".list-group").on("click", "p", function () {
   var text = $(this)
   .text()
@@ -104,11 +96,13 @@ $(".list-group").on("click", "p", function () {
   textInput.trigger("focus");
 });
 
+//field unfocused
 $(".list-group").on("blur", "textarea", function() {
   var text = $(this)
   .val()
   .trim();
 
+  //status type
   var status = $(this)
   .closest(".list-group")
   .attr("id")
@@ -118,6 +112,7 @@ $(".list-group").on("blur", "textarea", function() {
   .closest(".list-group-item")
   .index();
 
+  //update task/save to localStorage
   tasks[status][index].text = text;
   saveTasks();
 
@@ -128,7 +123,7 @@ $(".list-group").on("blur", "textarea", function() {
   $(this).replaceWith(taskP);
 });
 
-//due date
+//due date clicked
 $(".list-group").on("click", "span", function () {
   var date = $(this)
   .text()
@@ -142,9 +137,11 @@ $(".list-group").on("click", "span", function () {
 
   $(this).replaceWith(dateInput);
 
+  //bring up calendar
   dateInput.trighger("focus");
 })
 
+//due date value change
 $(".list-group").on("blur", "input[type='text']", function () {
   var date = $(this)
   .val()
@@ -159,15 +156,26 @@ $(".list-group").on("blur", "input[type='text']", function () {
   .closest(".list-group-item")
   .index();
 
+  //update task/save to localStorage
   task[status][index].date = date;
   saveTasks();
 
+  //recreate span
   var taskSpan = $("<span>")
   .addClass("badge badge-primary badge-pill")
   .text(date);
 
   $(this).replaceWith(taskSpan);
-})
+});
+
+//remove all tasks
+$("#remove-tasks").on("click", function() {
+  for (var key in tasks) {
+    tasks[key].length = 0;
+    $("#list-" + key).empty();
+  }
+  saveTasks();
+});
 
 // load tasks for the first time
 loadTasks();
